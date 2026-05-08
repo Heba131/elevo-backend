@@ -12,7 +12,6 @@ const app = express();
 const requestLogger = (req, res, next) => {
     const time = new Date().toLocaleString('ar-JO');
     
-    // مراقبة أي طلب يحتوي على كلمة products (سواء GET أو POST)
     if (req.url.includes('/api/products')) {
         console.log(`-----------------------------------------`);
         console.log(`[LOG]: محاولة الوصول للمنتجات أو إضافتها!`);
@@ -22,12 +21,11 @@ const requestLogger = (req, res, next) => {
     }
     next(); 
 };
-// ---------------------------------------------------------
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(requestLogger); // تفعيل المراقب هنا قبل المسارات
+app.use(requestLogger);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -42,7 +40,7 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-// تعديل المسار من post إلى get ليعمل من المتصفح مباشرة
+// مسار إضافة المنتجات الـ 10 (Seed)
 app.get('/api/products/seed', async (req, res) => {
     try {
         const initialProducts = [
@@ -50,14 +48,17 @@ app.get('/api/products/seed', async (req, res) => {
             { name: 'MacBook Air M2', category: 'Laptops', price: 1199, image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=800&auto=format&fit=crop' },
             { name: 'Sony Headphones', category: 'Accessories', price: 350, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400' },
             { name: 'Samsung Galaxy S24', category: 'Phones', price: 899, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400' },
-            { name: 'Smart Fitness Watch', category: 'Watches', price: 199, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=500&auto=format&fit=crop' }
+            { name: 'Logitech Mouse', category: 'Accessories', price: 49, image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400' },
+            { name: 'Dell XPS Laptop', category: 'Laptops', price: 1299, image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400' },
+            { name: 'Smart Fitness Watch', category: 'Watches', price: 199, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=500&auto=format&fit=crop' },
+            { name: 'Gaming Keyboard', category: 'Accessories', price: 120, image: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400' },
+            { name: '4K Gaming Monitor', category: 'Screens', price: 450, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400' },
+            { name: 'iPad Pro M2', category: 'Tablets', price: 799, image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400' }
         ];
         
-        // مسح المنتجات القديمة أولاً لتجنب التكرار (اختياري)
         await Product.deleteMany({}); 
-        
         await Product.insertMany(initialProducts);
-        res.json({ message: "تمت إضافة المنتجات بنجاح! تحقق من الـ Terminal لرؤية الـ Log" });
+        res.json({ message: "✅ تم تحديث قاعدة البيانات بـ 10 منتجات بنجاح!" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
