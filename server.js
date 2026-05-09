@@ -70,13 +70,12 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', isAuthenticated, productLogger, async (req, res) => {
     try {
-        const { name, price, category, image, description } = req.body;
+        const { name, price, category, image } = req.body;
         const newProduct = new Product({
             name,
             price,
             category,
             image,
-            description,
             createdBy: req.session.userId 
         });
         await newProduct.save();
