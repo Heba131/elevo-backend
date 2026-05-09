@@ -15,12 +15,13 @@ app.use(cors({
     origin: 'https://elevo-frontend.onrender.com', 
     credentials: true 
 }));
-
+app.set('trust proxy', 1);
 
 app.use(session({
     secret: process.env.SESSION_SECRET || 'elevo_secret_key',
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
         secure:true,
         sameSite: 'none',
